@@ -30,14 +30,11 @@ app.use(bodyParser.json());
 app.set("view engine", "ejs");
 // 设置静态路径
 app.use(express.static("uploads"));
+app.use(express.static("public"));
 app.use("/uploads", express.static("uploads"));
 
-// 首页页面渲染
-/* app.use("/", (req, res) => {
-	res.render("index");
-}); */
 // 注册页面渲染
-app.use("/register", (req, res) => {
+app.get("/register", (req, res) => {
 	// 默认读取views下的register.ejs文件
 	res.render("register");
 });
@@ -45,6 +42,10 @@ app.use("/register", (req, res) => {
 app.get("/login", (req, res) => {
 	// 默认读取views下的login.ejs文件
 	res.render("login");
+});
+// 首页页面渲染
+app.get("/", (req, res) => {
+	res.render("home");
 });
 
 // 处理注册
@@ -112,6 +113,28 @@ app.post("/doLogin", async (req, res) => {
 		res.json({
 			code: 201,
 			msg: "用户或密码错误",
+		});
+	}
+});
+
+// 首页显示用户列表
+app.get("/users", async (req, res) => {
+	// 查找所有的用户
+	const result = await User.find();
+	// console.log("result", result);
+	// 说明有数据
+	if (result.length > 0) {
+		res.json({
+			code: 200,
+			msg: "存在用户数据",
+			// 获取到result数组的数据
+			users: result,
+		});
+	} else {
+		// 说明没数据
+		res.json({
+			code: 201,
+			msg: "没有数据",
 		});
 	}
 });

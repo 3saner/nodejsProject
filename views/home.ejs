@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<link rel="stylesheet" href="../css/reset.css" />
+		<style>
+			h1 {
+				width: 100px;
+				margin: auto;
+				font-size: 40px;
+				line-height: 100px;
+			}
+			ul {
+				width: 1020px;
+				margin: 50px auto;
+			}
+			ul > li {
+				width: 200px;
+				height: 350px;
+				text-align: center;
+				background-color: aqua;
+				float: left;
+				margin: 2px;
+			}
+			.img {
+				width: 200px;
+				height: 200px;
+				overflow: hidden;
+			}
+			.img img {
+				width: 200px;
+			}
+			li > span,
+			li > .password {
+				line-height: 30px;
+			}
+			li > button {
+				margin-top: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>首页</h1>
+		<ul class="userList">
+			<li>
+				<span>用户名</span>
+				<div class="password">用户密码</div>
+				<div class="img">
+					<img src="../images/nana.jpeg" alt="" />
+				</div>
+				<button onclick="del()">删除</button>
+			</li>
+			<li>
+				<span>用户名</span>
+				<div class="password">用户密码</div>
+				<div class="img">
+					<img src="../images/nana.jpeg" alt="" />
+				</div>
+				<button onclick="del()">删除</button>
+			</li>
+			<li>
+				<span>用户名</span>
+				<div class="password">用户密码</div>
+				<div class="img">
+					<img src="../images/nana.jpeg" alt="" />
+				</div>
+				<button onclick="del()">删除</button>
+			</li>
+			<li>
+				<span>用户名</span>
+				<div class="password">用户密码</div>
+				<div class="img">
+					<img src="../images/nana.jpeg" alt="" />
+				</div>
+				<button onclick="del()">删除</button>
+			</li>
+			<li>
+				<span>用户名</span>
+				<div class="password">用户密码</div>
+				<div class="img">
+					<img src="../images/nana.jpeg" alt="" />
+				</div>
+				<button onclick="del()">删除</button>
+			</li>
+			<li>
+				<span>用户名</span>
+				<div class="password">用户密码</div>
+				<div class="img">
+					<img src="../images/nana.jpeg" alt="" />
+				</div>
+				<button onclick="del()">删除</button>
+			</li>
+		</ul>
+
+		<script>
+			loadUsers();
+			// 展示用户列表
+			function loadUsers() {
+				$.ajax({
+					url: "http://localhost:8888/users",
+					success: (res) => {
+						console.log(res);
+					},
+				});
+			}
+		</script>
+	</body>
+</html>
