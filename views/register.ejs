@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<style>
+			#imgs {
+				width: 200px;
+				height: 200px;
+				overflow: hidden;
+			}
+			#imgs > img {
+				width: 200px;
+			}
+			.dn {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<input type="file" name="avatar" class="uploadImg" /><br />
+		<div id="imgs" class="dn"><img src="" alt="" id="img" /></div>
+		用户名：<input type="text" name="username" id="username" /><br />
+		密码：<input type="text" name="password" id="password" /><br />
+		<input type="button" value="注册" id="registerBtn" />
+
+		<script>
+			// 上传图片
+			$(".uploadImg").change(function () {
+				// 获取上传图片的信息。
+				// console.log($(".uploadImg")[0].files[0]);
+				let file = $(".uploadImg")[0].files[0];
+				// console.log(file);
+				// 图片上传需要用FormData对象格式。使用formdata类的实例对象
+				let formdata = new FormData();
+				formdata.append("avatar", file);
+				$.ajax({
+					url: "/upload",
+					type: "post",
+					data: formdata,
+					contentType: false,
+					processData: false,
+					success: (res) => {
+						// {code: 200, msg: '图片上传成功', imgurl: 'uploads\\avatar-1651906658300-nana.jpeg'}
+						console.log(res);
+						if (res.code == 200) {
+							// 将传入的图片渲染到页面。
+							// 图片的div设置为none，获取数据后删除none的类，显示出来
+							$("#imgs").removeClass("dn");
+							// 给图片设置src属性
+							$("#img").attr("src", "http://localhost:8888/" + res.path);
+						}
+					},
+				});
+			});
+
+			// 上传注册参数
+			$("#registerBtn").click(function () {
+				const imgurl = $("#img").attr("src");
+				const username = $("#username").val();
+				const password = $("#password").val();
+				// console.log(imgurl, username, password);
+				$.post("/doregister", { imgurl, username, password }).then((res) => {
+					console.log(res);
+					// {code: 200, msg: '用户注册成功'}
+					alert(res.msg);
+					if (res.code == 200) {
+						// 表示成功，跳转到登录页面
+						location.href = "./login";
+					} else {
+						$("#username").val("");
+						$("#password").val("");
+						$("#imgs").addClass("dn");
+						$(".uploadImg").val("");
+						// 光标聚焦到username上面
+						$("#username").focus();
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.min.js"></script>
+	</head>
+	<body>
+		<h1>登录页面</h1>
+		<div>
+			账号：<input
+				type="text"
+				name="username"
+				id="username"
+				autocomplete="off"
+			/><span></span>
+		</div>
+		<div>密码：<input type="text" name="password" id="password" /></div>
+		<div><input type="button" id="LoginBtn" value="登录" /></div>
+
+		<script>
+			// 检测用户名是否存在
+			let newFn = _.debounce(checkName, 500);
+			function checkName() {
+				let username = $("#username").val();
+				let params = new URLSearchParams();
+				params.append("username", username);
+				axios
+					.post("http://localhost:8888/checkname", params)
+					.then((res) => {
+						// {code: 200, msg: '用户名正确'}
+						console.log(res.data);
+						$("#username").next().html(res.data.msg);
+						if (res.data.code == 200) {
+							$("#username").next().css("color", "green");
+						} else {
+							$("#username").next().css("color", "red");
+						}
+					})
+					.catch((reject) => {
+						console.log("获取检查用户名接口失败");
+					});
+			}
+			$("#username").on("input", newFn);
+
+			$("#LoginBtn").click(function () {
+				let username = $("#username").val();
+				let password = $("#password").val();
+				$.post("doLogin", {
+					username,
+					password,
+				}).then((res) => {
+					// {code: 200, msg: '用户登陆成功'}
+					console.log(res);
+					alert(res.msg);
+					if (res.code == 200) {
+						location.href = "/";
+					} else if (res.code == 201) {
+						// 清空账号密码
+						$("#username").val("");
+						$("#password").val("");
+						// 获取光标
+						$("#username").focus();
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
