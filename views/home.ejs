@@ -5,7 +5,10 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Document</title>
-		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<link
+			href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
 		<link rel="stylesheet" href="../css/reset.css" />
 		<style>
 			h1 {
@@ -38,62 +41,28 @@
 			li > .password {
 				line-height: 30px;
 			}
-			li > button {
+			.btnAll {
 				margin-top: 20px;
 			}
 		</style>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.1.2/js/bootstrap.bundle.js"></script>
 	</head>
 	<body>
 		<h1>首页</h1>
 		<ul class="userList">
-			<li>
+			<!-- <li>
 				<span>用户名</span>
 				<div class="password">用户密码</div>
 				<div class="img">
 					<img src="../images/nana.jpeg" alt="" />
 				</div>
-				<button onclick="del()">删除</button>
-			</li>
-			<li>
-				<span>用户名</span>
-				<div class="password">用户密码</div>
-				<div class="img">
-					<img src="../images/nana.jpeg" alt="" />
+				<div class="btnAll">
+					<a href="" class="btn btn-outline-primary">详情</a>
+					<a href="" class="btn btn-outline-primary">修改</a>
+					<button onclick="del()" class="btn btn-outline-danger">删除</button>
 				</div>
-				<button onclick="del()">删除</button>
-			</li>
-			<li>
-				<span>用户名</span>
-				<div class="password">用户密码</div>
-				<div class="img">
-					<img src="../images/nana.jpeg" alt="" />
-				</div>
-				<button onclick="del()">删除</button>
-			</li>
-			<li>
-				<span>用户名</span>
-				<div class="password">用户密码</div>
-				<div class="img">
-					<img src="../images/nana.jpeg" alt="" />
-				</div>
-				<button onclick="del()">删除</button>
-			</li>
-			<li>
-				<span>用户名</span>
-				<div class="password">用户密码</div>
-				<div class="img">
-					<img src="../images/nana.jpeg" alt="" />
-				</div>
-				<button onclick="del()">删除</button>
-			</li>
-			<li>
-				<span>用户名</span>
-				<div class="password">用户密码</div>
-				<div class="img">
-					<img src="../images/nana.jpeg" alt="" />
-				</div>
-				<button onclick="del()">删除</button>
-			</li>
+			</li> -->
 		</ul>
 
 		<script>
@@ -104,6 +73,46 @@
 					url: "http://localhost:8888/users",
 					success: (res) => {
 						console.log(res);
+						if (res.code == 200) {
+							let usersArr = res.users;
+							let str = "";
+							// 客户端渲染的
+							// <a href="/detail?id=${usersArr[i]._id}" class="btn btn-outline-primary">详情</a>
+							// 服务端渲染的
+							// <a href="/detail/${usersArr[i]._id}" class="btn btn-outline-primary">详情</a>
+							for (let i = 0; i < usersArr.length; i++) {
+								str += `<li>
+							<span>${usersArr[i].username}</span>
+							<div class="password">${usersArr[i].password}</div>
+							<div class="img">
+								<img src="${usersArr[i].imgurl}" alt="" />
+							</div>
+							<div class="btnAll">
+								<a href="/detail?id=${usersArr[i]._id}" class="btn btn-outline-primary">详情</a>
+							<a href="/updataUser?id=${usersArr[i]._id}" class="btn btn-outline-primary">修改</a>
+							<button onclick="del('${usersArr[i]._id}')" class="btn btn-outline-danger">删除</button>
+							</div>
+						</li>`;
+							}
+							$(".userList").html(str);
+						}
+					},
+				});
+			}
+
+			// 删除用户 这里使用delete的方法(restful--》api)
+			function del(id) {
+				console.log(id);
+				// ajax中没有delete方法。$.delete方法
+				$.ajax({
+					url: `/deleteuser/${id}`,
+					type: "delete",
+					success: (res) => {
+						console.log(res);
+						alert(res.msg);
+						if (res.code == 200) {
+							loadUsers();
+						}
 					},
 				});
 			}

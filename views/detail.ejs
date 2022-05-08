@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<style>
+			img {
+				height: 300px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>详情页</h1>
+		<div class="detail">
+			<span>用户名</span>
+			<div class="password">用户密码</div>
+			<div class="img">
+				<img src="../images/nana.jpeg" alt="" />
+			</div>
+		</div>
+		<script>
+			let paramsObj = new URLSearchParams(location.search);
+			let id = paramsObj.get("id");
+			console.log(id);
+			showDetail(id);
+			function showDetail(id) {
+				$.ajax({
+					// 动态参数
+					url: "/detail/" + id, // /detail/type/id==>服务端配置/detail/:type/:id
+					success: (res) => {
+						console.log(res);
+						let str = "";
+						if (res.code == 200) {
+							let userObj = res.user;
+							str = `<span>${userObj.username}</span>
+                            <div class="password">${userObj.password}</div>
+                            <div class="img">
+                                <img src="${userObj.imgurl}" alt="" />
+                            </div>`;
+						}
+						$(".detail").html(str);
+					},
+				});
+			}
+		</script>
+	</body>
+</html>

@@ -47,6 +47,17 @@ app.get("/login", (req, res) => {
 app.get("/", (req, res) => {
 	res.render("home");
 });
+// 详情页
+app.get("/detail", (req, res) => {
+	// 获取？后面的参数字符串
+	// console.log(req.query);
+	// let id = req.query.id;
+	res.render("detail");
+});
+// 修改页
+app.get("/updataUser", (req, res) => {
+	res.render("updataUser");
+});
 
 // 处理注册
 app.post("/doregister", async (req, res) => {
@@ -135,9 +146,107 @@ app.get("/users", async (req, res) => {
 		res.json({
 			code: 201,
 			msg: "没有数据",
+			users: [],
 		});
 	}
 });
+
+// 根据id获取对应的数据
+app.get("/detail/:id", async (req, res) => {
+	console.log(req.params.id); //req.params.id可以获取动态id参数
+	const _id = req.params.id;
+	const result = await User.findById(_id);
+	console.log(result); //返回对应的数据
+	if (result) {
+		res.json({
+			code: 200,
+			msg: "获取详情成功",
+			user: result,
+		});
+	} else {
+		res.json({
+			code: 203,
+			msg: "查找的id不存在",
+		});
+	}
+});
+
+// 根据id获取对应的数据（服务端渲染）
+/* app.get("/detail/:id", async (req, res) => {
+	const id = req.params.id;
+	// console.log(id);
+	const result = await User.findById(id);
+	console.log(222, result);
+	if (result) {
+		// 找到数据
+		res.render("detail", {
+			user: result,
+		});
+	} else {
+		// 这种情况表示没有找到数据
+		res.render("detail");
+	}
+}); */
+
+// 删除用户 这里使用delete的方法
+app.delete("/deleteuser/:id", async (req, res) => {
+	// console.log(req.params.id);
+	const id = req.params.id;
+	// 通过id删除他
+	const result = await User.findByIdAndDelete(id);
+	// console.log(result);
+	if (result) {
+		res.json({
+			code: 200,
+			msg: "用户删除成功",
+		});
+	} else {
+		res.json({
+			code: 205,
+			msg: "用户删除失败",
+		});
+	}
+});
+
+// 根据id获取用户 修改页面
+app.get("/updataUser/:id", async (req, res) => {
+	console.log(req.params.id);
+	let id = req.params.id;
+	const result = await User.findById(id);
+	console.log(result);
+	if (result) {
+		res.json({
+			code: 200,
+			msg: "获取用户信息成功",
+			user: result,
+		});
+	} else {
+		res.json({
+			code: 201,
+			msg: "获取用户信息失败",
+		});
+	}
+});
+
+// 修改用户
+app.put("/updataUser1/:id", async (req, res) => {
+	console.log(req.params.id);
+	let id = req.params.id;
+	let result = await User.findByIdAndUpdate(id, req.body);
+	if (result) {
+		res.json({
+			code: 200,
+			msg: "修改成功",
+		});
+	} else {
+		res.json({
+			code: 201,
+			msg: "修改失败",
+		});
+	}
+});
+
+// 修改页面
 
 // 图片上传
 app.post("/upload", upload.single("avatar"), function (req, res, next) {

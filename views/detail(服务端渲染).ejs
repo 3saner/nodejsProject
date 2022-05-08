@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<style>
+			img {
+				height: 300px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>详情页</h1>
+		<div class="detail">
+			<!-- <%=user.username%> -->
+			<span><%=user.username%></span>
+			<!-- <%=user.password%> -->
+			<div class="password"><%=user.password%></div>
+			<div class="img">
+				<!-- <%=user.imgurl%> -->
+				<img src="<%=user.imgurl%>" alt="" />
+			</div>
+		</div>
+	</body>
+</html>
